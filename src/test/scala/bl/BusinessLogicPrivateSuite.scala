@@ -5,7 +5,7 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 class BusinessLogicPrivateSuite extends AnyFunSuite with ScalaCheckPropertyChecks {
-  val bl = new BusinessLogic[Either[String, *]]
+  val bl = new BusinessLogic[Either[String, *], Seq]
 
   test("groupByKey empty seq returns empty seq") {
     bl.groupByKey(Seq()) shouldBe Seq()

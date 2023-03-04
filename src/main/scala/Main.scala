@@ -1,10 +1,15 @@
 
 import bl.BusinessLogic
 import org.apache.spark.sql.functions.monotonically_increasing_id
-import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.{DataFrame, Dataset, Row, SparkSession}
+import cats._
+import cats.data.EitherT
 import cats.implicits._
-
+import cats.syntax.all._
+import frameless.cats._
+import frameless.syntax._
 object Main {
+
   private def parseEntry(row: Row): Either[String, (Int, Int)] = {
     import scala.util.Try
     import cats.syntax.all._
@@ -44,19 +49,14 @@ object Main {
         val input = spark.read.options(Map("sep" -> "\t,", "header" -> "true")).csv(inputDir)
         import scala.jdk.CollectionConverters._
 
-        val dataset = input
+        val businessLogic = new BusinessLogic[Either[String, *], Dataset]
+
+        val result = for {
+          dataset <- input
           .withColumn("index", monotonically_increasing_id())
-          .map(parseEntry)
-
-        val businessLogic = new BusinessLogic[Either[String, *]]
-
-        val result =
-          dataset
-            .toLocalIterator()
-            .asScala
-            .toSeq
-            .sequence
-            .flatMap(businessLogic.processSeq)
+          .traverse(parseEntry)
+          result <- dataset.traverse(businessLogic.processSeq)
+        } yield result
 
         result.fold(
           err => System.err.println(s"Invalid input: $err"),

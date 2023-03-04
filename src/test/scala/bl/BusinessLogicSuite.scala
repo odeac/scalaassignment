@@ -39,7 +39,7 @@ object Generators {
       .map { lst => Random.shuffle(lst.concat(lst))}
 }
 class BusinessLogicSuite extends AnyFunSuite with ScalaCheckPropertyChecks {
-  val bl = new BusinessLogic[Either[String, *]]
+  val bl = new BusinessLogic[Either[String, *], Seq]
 
   test("empty input -> should fail") {
     bl.processSeq(Seq()) shouldBe Left("Some values occur an even number of times")

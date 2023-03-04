@@ -2,12 +2,18 @@ name := "scalaassignment"
 version := "0.1.0-SNAPSHOT"
 scalaVersion := "2.13.10"
 
+val sparkVersion = "3.2.1"
+val framelessVersion = "0.13.0"
+
 libraryDependencies ++= Seq(
   "org.typelevel" %% "cats-core" % "2.9.0",
-  "org.apache.spark" %% "spark-core" % "3.3.2",
-  "org.apache.spark" %% "spark-sql" % "3.3.2",
-  "org.apache.hadoop" % "hadoop-client" % "3.3.2",
-  "org.apache.hadoop" % "hadoop-client-api" % "3.3.2",
+  "org.apache.spark" %% "spark-core" % sparkVersion,
+  "org.apache.spark" %% "spark-sql" % sparkVersion,
+  "org.apache.hadoop" % "hadoop-client" % sparkVersion,
+  "org.apache.hadoop" % "hadoop-client-api" % sparkVersion,
+  "org.typelevel" %% "frameless-dataset-spark32" % framelessVersion,
+//  "org.typelevel" %% "frameless-ml" % framelessVersion,
+  "org.typelevel" %% "frameless-cats" % framelessVersion,
   "org.scalatest" %% "scalatest" % "3.2.15" % "test",
   "org.scalatestplus" %% "scalacheck-1-17" % "3.2.15.0" % "test",
   "io.chrisdavenport" %% "cats-scalacheck" % "0.3.2"
